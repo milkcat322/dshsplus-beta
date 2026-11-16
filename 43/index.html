@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+<script>window.PLUS_APP = 43;</script><script src="../plus-roster.js?v=202611160906"></script><script src="../plus.js?v=202611160906"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>dshs43.app · 대전과학고 43기</title>
+  <meta name="description" content="대전과학고 43기 수행평가 공지 · 내 일정 · 할 일 · 급식 · 학교 일정">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0a0a0f">
+  <meta name="color-scheme" content="dark light">
+  <script>
+    // 카카오톡 안 브라우저로 열면 기본 브라우저(Safari · Chrome)로 다시 엽니다.
+    // dshs.app 로그인은 Google 로그인인데, Google 은 앱 안 브라우저(웹뷰)에서 로그인을 막아서(disallowed_useragent) 로그인이 안 됩니다.
+    // 카카오톡이 열지 못하면(오래된 버전 등) 그대로 이 화면을 씁니다. 로그인 버튼도 다시 한 번 기본 브라우저로 보냅니다 (js/ 의 inKakao).
+    (function () {
+      if (!/KAKAOTALK/i.test(navigator.userAgent)) return;
+      try { location.replace('kakaotalk://web/openExternal?url=' + encodeURIComponent(location.href)); } catch (e) { }
+    })();
+  </script>
+  <script>
+    // 화면 테마: localStorage dshs-theme = dark | light | simple | ocean | forest | coco | sakura.
+    // 고른 적이 없으면 기기 설정(다크 · 라이트)을 따릅니다. 화면을 그리기 전에 정해 깜빡이지 않게 합니다.
+    (() => {
+      const mq = matchMedia('(prefers-color-scheme: light)');
+      // 테마를 더하면 여기 두 줄에도 넣습니다 (없는 이름은 기기 설정으로 되돌립니다). TONE: 밝기, BG: 폰 주소창 색(= 그 테마의 --bg)
+      const TONE = { dark: 'dark', light: 'light', simple: 'light', ocean: 'dark', forest: 'dark', coco: 'light', sakura: 'light' };
+      const BG = { dark: '#0a0a0f', light: '#f5f5fa', simple: '#ffffff', ocean: '#07111b', forest: '#0a120d', coco: '#f2f7f3', sakura: '#fbf3f6' };
+      window.applyTheme = () => {
+        let t = null;
+        try { t = localStorage.getItem('dshs-theme'); } catch (e) { }
+        if (!TONE[t]) t = mq.matches ? 'light' : 'dark';
+        const root = document.documentElement;
+        root.dataset.theme = t;
+        root.dataset.tone = TONE[t];
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.content = BG[t];
+      };
+      mq.addEventListener('change', window.applyTheme);
+      window.applyTheme();
+    })();
+  </script>
+  <link rel="icon" href="favicon-32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="dshs43.app">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- 빨리 뜨게: 서버 연결을 미리 열고, 로그인 라이브러리를 화면을 읽는 동안 미리 받고, 글꼴은 화면을 막지 않게 받습니다 -->
+  <link rel="preconnect" href="https://esm.sh" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="modulepreload" href="https://esm.sh/@supabase/supabase-js@2.45.4?bundle">
+  <link rel="modulepreload" href="https://esm.sh/@supabase/supabase-js@2.45.4/es2022/supabase-js.bundle.mjs">
+  <!-- 글꼴: 본문은 Pretendard (jsdelivr, 버전 고정 · 쓰는 글자 조각만 받음), 숫자 · 날짜 · 작은 제목은 Inter (Google Fonts. css/base.css 의 --font-num). 화면을 먼저 그리고 나중에 입힙니다. -->
+  <link
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+    rel="stylesheet" media="print" onload="this.media='all'">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet"
+    media="print" onload="this.media='all'">
+  <noscript>
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+      rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet">
+  </noscript>
+  <!-- 스타일 (css/). 아래 순서대로 읽습니다: 같은 선택자는 뒤 파일이 앞 파일을 덮어씁니다. 파일을 더하면 sw.js 의 SHELL 에도 넣습니다. -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/timetable.css">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/study.css">
+  <link rel="stylesheet" href="css/calendar.css">
+  <link rel="stylesheet" href="css/events.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="stylesheet" href="css/themes.css">
+</head>
+
+<body>
+  <!-- 아이콘 모음 (Material Symbols Rounded · Apache 2.0, fonts.google.com/icons). 이모지 대신 씁니다.
+     HTML 에서는 <svg class="ic" aria-hidden="true"><use href="#i-이름"/></svg>, 스크립트에서는 icon("이름").
+     새 아이콘은 Rounded · 채움 없음 · 24px SVG 의 path 를 symbol 로 하나 더 넣습니다. -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-campaign" viewBox="0 -960 960 960">
+      <path
+        d="M840-440h-80q-17 0-28.5-11.5T720-480q0-17 11.5-28.5T760-520h80q17 0 28.5 11.5T880-480q0 17-11.5 28.5T840-440ZM664-288q10-14 26-16t30 8l64 48q14 10 16 26t-8 30q-10 14-26 16t-30-8l-64-48q-14-10-16-26t8-30Zm120-424-64 48q-14 10-30 8t-26-16q-10-14-8-30t16-26l64-48q14-10 30-8t26 16q10 14 8 30t-16 26ZM200-360h-40q-33 0-56.5-23.5T80-440v-80q0-33 23.5-56.5T160-600h160l139-84q20-12 40.5 0t20.5 35v338q0 23-20.5 35t-40.5 0l-139-84h-40v120q0 17-11.5 28.5T240-200q-17 0-28.5-11.5T200-240v-120Zm240-22v-196l-98 58H160v80h182l98 58Zm120 36v-268q27 24 43.5 58.5T620-480q0 41-16.5 75.5T560-346ZM300-480Z" />
+    </symbol>
+    <symbol id="i-settings" viewBox="0 -960 960 960">
+      <path
+        d="M433-80q-27 0-46.5-18T363-142l-9-66q-13-5-24.5-12T307-235l-62 26q-25 11-50 2t-39-32l-47-82q-14-23-8-49t27-43l53-40q-1-7-1-13.5v-27q0-6.5 1-13.5l-53-40q-21-17-27-43t8-49l47-82q14-23 39-32t50 2l62 26q11-8 23-15t24-12l9-66q4-26 23.5-44t46.5-18h94q27 0 46.5 18t23.5 44l9 66q13 5 24.5 12t22.5 15l62-26q25-11 50-2t39 32l47 82q14 23 8 49t-27 43l-53 40q1 7 1 13.5v27q0 6.5-2 13.5l53 40q21 17 27 43t-8 49l-48 82q-14 23-39 32t-50-2l-60-26q-11 8-23 15t-24 12l-9 66q-4 26-23.5 44T527-80h-94Zm7-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z" />
+    </symbol>
+    <symbol id="i-install_mobile" viewBox="0 -960 960 960">
+      <path
+        d="M280-40q-33 0-56.5-23.5T200-120v-720q0-33 23.5-56.5T280-920h400q33 0 56.5 23.5T760-840v124q18 7 29 22t11 34v80q0 19-11 34t-29 22v404q0 33-23.5 56.5T680-40H280Zm0-80h400v-720H280v720Zm0 0v-720 720Zm215-219.5q7-2.5 13-8.5l104-104q11-11 11.5-27.5T612-508q-11-11-27.5-11.5T556-509l-36 35v-126q0-17-11.5-28.5T480-640q-17 0-28.5 11.5T440-600v126l-36-35q-11-11-27.5-11T348-508q-11 11-11 28t11 28l104 104q6 6 13 8.5t15 2.5q8 0 15-2.5Z" />
+    </symbol>
+    <symbol id="i-wifi_off" viewBox="0 -960 960 960">
+      <path
+        d="M762-84 414-434q-31 7-59.5 19T301-386q-21 14-46.5 14.5T212-389q-18-18-16.5-43.5T217-473q23-17 48.5-31t52.5-26l-90-90q-26 14-50.5 29.5T130-557q-20 16-45.5 16T42-559q-18-18-17-43t21-41q22-18 45-34.5t49-30.5l-56-56q-11-11-11-28t11-28q11-11 28-11t28 11l679 679q12 12 12 28.5T819-84q-12 11-28.5 11.5T762-84Zm-353-65.5Q380-179 380-220q0-42 29-71t71-29q42 0 71 29t29 71q0 41-29 70.5T480-120q-42 0-71-29.5ZM753-395q-16 16-37.5 15.5T678-396l-10-10-10-10-96-96q-13-13-5-27t28-9q45 11 85.5 31t75.5 47q18 14 20.5 36.5T753-395Zm165-164q-17 18-42 18.5T831-556q-72-59-161.5-91.5T480-680q-21 0-40.5 1.5T400-674q-25 4-45-10.5T331-724q-4-25 11-45t40-24q24-4 48.5-5.5T480-800q125 0 235.5 41.5T914-644q20 17 21 42t-17 43Z" />
+    </symbol>
+    <symbol id="i-lock" viewBox="0 -960 960 960">
+      <path
+        d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm0-80h480v-400H240v400Zm296.5-143.5Q560-327 560-360t-23.5-56.5Q513-440 480-440t-56.5 23.5Q400-393 400-360t23.5 56.5Q447-280 480-280t56.5-23.5ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80ZM240-160v-400 400Z" />
+    </symbol>
+    <symbol id="i-auto_awesome" viewBox="0 -960 960 960">
+      <path
+        d="m706-706-70-32q-6-3-8.5-8t-2.5-10q0-5 2.5-10t8.5-8l70-32 32-70q3-6 8-9t10-3q5 0 10 3t8 9l32 70 70 32q6 3 9 8t3 10q0 5-3 10t-9 8l-70 32-32 70q-3 6-8 8.5t-10 2.5q-5 0-10-2.5t-8-8.5l-32-70ZM260-380l-160-73q-9-4-13-11.5T83-480q0-8 4-15.5t13-11.5l160-73 73-160q4-9 11.5-13t15.5-4q8 0 15.5 4t11.5 13l73 160 160 73q9 4 13 11.5t4 15.5q0 8-4 15.5T620-453l-160 73-73 160q-4 9-11.5 13t-15.5 4q-8 0-15.5-4T333-220l-73-160Zm100 26 40-86 86-40-86-40-40-86-40 86-86 40 86 40 40 86Zm350 204-70-32q-6-3-9-8t-3-10q0-5 3-10t9-8l70-32 32-70q3-6 8-9t10-3q5 0 10 3t8 9l32 70 70 32q6 3 9 8t3 10q0 5-3 10t-9 8l-70 32-32 70q-3 6-8 9t-10 3q-5 0-10-3t-8-9l-32-70ZM360-480Z" />
+    </symbol>
+    <symbol id="i-troubleshoot" viewBox="0 -960 960 960">
+      <path
+        d="M440-240q-63 0-117.5-22T226-322q-12-11-11-26.5t14-26.5q13-11 30-10.5t30 11.5q32 26 69.5 40t81.5 14q100 0 170-70t70-170q0-100-70-170t-170-70q-83 0-146.5 50T209-623q-5 17-18 30t-30 13q-17 0-27.5-13.5T127-624q23-110 109.5-183T440-880q134 0 227 93t93 227q0 56-18 105.5T692-364l160 160q11 11 11 28t-11 28q-11 11-28 11t-28-11L636-308q-41 32-90.5 50T440-240Zm-13-266 37-115q3-8 9.5-13.5T489-640h24q8 0 14 4t10 11l53 105q13 0 21.5 8.5T620-490q0 13-8.5 21.5T590-460h-18q-8 0-15.5-4.5T545-477l-39-77-44 135q-3 9-10 14t-16 5h-18q-9 0-16.5-5.5T391-420l-57-188-45 128q-3 9-10.5 14.5T261-460H110q-13 0-21.5-8.5T80-490q0-13 8.5-21.5T110-520h130l59-171q3-9 10.5-14t16.5-5h19q10 0 17 6t10 15l55 183Z" />
+    </symbol>
+    <symbol id="i-warning" viewBox="0 -960 960 960">
+      <path
+        d="M109-120q-11 0-20-5.5T75-140q-5-9-5.5-19.5T75-180l370-640q6-10 15.5-15t19.5-5q10 0 19.5 5t15.5 15l370 640q6 10 5.5 20.5T885-140q-5 9-14 14.5t-20 5.5H109Zm69-80h604L480-720 178-200Zm330.5-51.5Q520-263 520-280t-11.5-28.5Q497-320 480-320t-28.5 11.5Q440-297 440-280t11.5 28.5Q463-240 480-240t28.5-11.5Zm0-120Q520-383 520-400v-120q0-17-11.5-28.5T480-560q-17 0-28.5 11.5T440-520v120q0 17 11.5 28.5T480-360q17 0 28.5-11.5ZM480-460Z" />
+    </symbol>
+    <symbol id="i-hourglass_top" viewBox="0 -960 960 960">
+      <path
+        d="M320-160h320v-120q0-66-47-113t-113-47q-66 0-113 47t-47 113v120ZM200-80q-17 0-28.5-11.5T160-120q0-17 11.5-28.5T200-160h40v-120q0-61 28.5-114.5T348-480q-51-32-79.5-85.5T240-680v-120h-40q-17 0-28.5-11.5T160-840q0-17 11.5-28.5T200-880h560q17 0 28.5 11.5T800-840q0 17-11.5 28.5T760-800h-40v120q0 61-28.5 114.5T612-480q51 32 79.5 85.5T720-280v120h40q17 0 28.5 11.5T800-120q0 17-11.5 28.5T760-80H200Z" />
+    </symbol>
+    <symbol id="i-check_circle" viewBox="0 -960 960 960">
+      <path
+        d="m424-408-86-86q-11-11-28-11t-28 11q-11 11-11 28t11 28l114 114q12 12 28 12t28-12l226-226q11-11 11-28t-11-28q-11-11-28-11t-28 11L424-408Zm56 328q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+    </symbol>
+    <symbol id="i-cancel" viewBox="0 -960 960 960">
+      <path
+        d="m480-424 116 116q11 11 28 11t28-11q11-11 11-28t-11-28L536-480l116-116q11-11 11-28t-11-28q-11-11-28-11t-28 11L480-536 364-652q-11-11-28-11t-28 11q-11 11-11 28t11 28l116 116-116 116q-11 11-11 28t11 28q11 11 28 11t28-11l116-116Zm0 344q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+    </symbol>
+    <symbol id="i-notifications" viewBox="0 -960 960 960">
+      <path
+        d="M200-200q-17 0-28.5-11.5T160-240q0-17 11.5-28.5T200-280h40v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h40q17 0 28.5 11.5T800-240q0 17-11.5 28.5T760-200H200Zm280-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z" />
+    </symbol>
+    <symbol id="i-notifications_active" viewBox="0 -960 960 960">
+      <path
+        d="M200-200q-17 0-28.5-11.5T160-240q0-17 11.5-28.5T200-280h40v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h40q17 0 28.5 11.5T800-240q0 17-11.5 28.5T760-200H200Zm280-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280ZM120-560q-17 0-28.5-13T82-603q8-75 42-139.5T211-855q13-11 29.5-10t26.5 15q10 14 8 30t-15 28q-39 37-64 86t-33 106q-2 17-14 28.5T120-560Zm720 0q-17 0-29-11.5T797-600q-8-57-33-106t-64-86q-13-12-15-28t8-30q10-14 26.5-15t29.5 10q53 48 87 112.5T878-603q2 17-9.5 30T840-560Z" />
+    </symbol>
+    <symbol id="i-location_on" viewBox="0 -960 960 960">
+      <path
+        d="M480-186q122-112 181-203.5T720-552q0-109-69.5-178.5T480-800q-101 0-170.5 69.5T240-552q0 71 59 162.5T480-186Zm-28 74q-14-5-25-15-65-60-115-117t-83.5-110.5q-33.5-53.5-51-103T160-552q0-150 96.5-239T480-880q127 0 223.5 89T800-552q0 45-17.5 94.5t-51 103Q698-301 648-244T533-127q-11 10-25 15t-28 5q-14 0-28-5Zm28-448Zm56.5 56.5Q560-527 560-560t-23.5-56.5Q513-640 480-640t-56.5 23.5Q400-593 400-560t23.5 56.5Q447-480 480-480t56.5-23.5Z" />
+    </symbol>
+    <symbol id="i-event_seat" viewBox="0 -960 960 960">
+      <path
+        d="M171.5-131.5Q160-143 160-160v-120q0-33 23.5-56.5T240-360h480q33 0 56.5 23.5T800-280v120q0 17-11.5 28.5T760-120q-17 0-28.5-11.5T720-160v-120H240v120q0 17-11.5 28.5T200-120q-17 0-28.5-11.5ZM180-400q-25 0-42.5-17.5T120-460q0-25 17.5-42.5T180-520q25 0 42.5 17.5T240-460q0 25-17.5 42.5T180-400Zm100 0v-360q0-33 23.5-56.5T360-840h240q33 0 56.5 23.5T680-760v360H280Zm457.5-17.5Q720-435 720-460t17.5-42.5Q755-520 780-520t42.5 17.5Q840-485 840-460t-17.5 42.5Q805-400 780-400t-42.5-17.5ZM360-480h240v-280H360v280Zm0 0h240-240Z" />
+    </symbol>
+    <symbol id="i-calendar_view_week" viewBox="0 -960 960 960">
+      <path
+        d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm360-80h100v-480H520v480Zm-180 0h100v-480H340v480Zm-180 0h100v-480H160v480Zm540 0h100v-480H700v480Z" />
+    </symbol>
+    <symbol id="i-school" viewBox="0 -960 960 960">
+      <path
+        d="M242-249q-20-11-31-29.5T200-320v-192l-96-53q-11-6-16-15t-5-20q0-11 5-20t16-15l338-184q9-5 18.5-7.5T480-829q10 0 19.5 2.5T518-819l381 208q10 5 15.5 14.5T920-576v256q0 17-11.5 28.5T880-280q-17 0-28.5-11.5T840-320v-236l-80 44v192q0 23-11 41.5T718-249L518-141q-9 5-18.5 7.5T480-131q-10 0-19.5-2.5T442-141L242-249Zm238-203 274-148-274-148-274 148 274 148Zm0 241 200-108v-151l-161 89q-9 5-19 7.5t-20 2.5q-10 0-20-2.5t-19-7.5l-161-89v151l200 108Zm0-241Zm0 121Zm0 0Z" />
+    </symbol>
+    <symbol id="i-wallpaper" viewBox="0 -960 960 960">
+      <path
+        d="M200-120q-33 0-56.5-23.5T120-200v-200q0-17 11.5-28.5T160-440q17 0 28.5 11.5T200-400v200h200q17 0 28.5 11.5T440-160q0 17-11.5 28.5T400-120H200Zm560 0H560q-17 0-28.5-11.5T520-160q0-17 11.5-28.5T560-200h200v-200q0-17 11.5-28.5T800-440q17 0 28.5 11.5T840-400v200q0 33-23.5 56.5T760-120ZM450-320l104-139q6-8 16-8t16 8l110 147q8 10 2 21t-18 11H280q-12 0-18-11t2-21l80-107q6-8 16-8t16 8l74 99ZM120-760q0-33 23.5-56.5T200-840h200q17 0 28.5 11.5T440-800q0 17-11.5 28.5T400-760H200v200q0 17-11.5 28.5T160-520q-17 0-28.5-11.5T120-560v-200Zm720 0v200q0 17-11.5 28.5T800-520q-17 0-28.5-11.5T760-560v-200H560q-17 0-28.5-11.5T520-800q0-17 11.5-28.5T560-840h200q33 0 56.5 23.5T840-760ZM577-577q-17-17-17-43t17-43q17-17 43-17t43 17q17 17 17 43t-17 43q-17 17-43 17t-43-17Z" />
+    </symbol>
+    <symbol id="i-smartphone" viewBox="0 -960 960 960">
+      <path
+        d="M280-40q-33 0-56.5-23.5T200-120v-720q0-33 23.5-56.5T280-920h400q33 0 56.5 23.5T760-840v124q18 7 29 22t11 34v80q0 19-11 34t-29 22v404q0 33-23.5 56.5T680-40H280Zm0-80h400v-720H280v720Zm0 0v-720 720Zm228.5-611.5Q520-743 520-760t-11.5-28.5Q497-800 480-800t-28.5 11.5Q440-777 440-760t11.5 28.5Q463-720 480-720t28.5-11.5Z" />
+    </symbol>
+    <symbol id="i-dark_mode" viewBox="0 -960 960 960">
+      <path
+        d="M480-120q-151 0-255.5-104.5T120-480q0-138 90-239.5T440-838q13-2 23 3.5t16 14.5q6 9 6.5 21t-7.5 23q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q11-7 22.5-6.5T819-479q10 5 15.5 15t3.5 24q-14 138-117.5 229T480-120Zm0-80q88 0 158-48.5T740-375q-20 5-40 8t-40 3q-123 0-209.5-86.5T364-660q0-20 3-40t8-40q-78 32-126.5 102T200-480q0 116 82 198t198 82Zm-10-270Z" />
+    </symbol>
+    <symbol id="i-light_mode" viewBox="0 -960 960 960">
+      <path
+        d="M565-395q35-35 35-85t-35-85q-35-35-85-35t-85 35q-35 35-35 85t35 85q35 35 85 35t85-35Zm-226.5 56.5Q280-397 280-480t58.5-141.5Q397-680 480-680t141.5 58.5Q680-563 680-480t-58.5 141.5Q563-280 480-280t-141.5-58.5ZM80-440q-17 0-28.5-11.5T40-480q0-17 11.5-28.5T80-520h80q17 0 28.5 11.5T200-480q0 17-11.5 28.5T160-440H80Zm720 0q-17 0-28.5-11.5T760-480q0-17 11.5-28.5T800-520h80q17 0 28.5 11.5T920-480q0 17-11.5 28.5T880-440h-80ZM451.5-771.5Q440-783 440-800v-80q0-17 11.5-28.5T480-920q17 0 28.5 11.5T520-880v80q0 17-11.5 28.5T480-760q-17 0-28.5-11.5Zm0 720Q440-63 440-80v-80q0-17 11.5-28.5T480-200q17 0 28.5 11.5T520-160v80q0 17-11.5 28.5T480-40q-17 0-28.5-11.5ZM226-678l-43-42q-12-11-11.5-28t11.5-29q12-12 29-12t28 12l42 43q11 12 11 28t-11 28q-11 12-27.5 11.5T226-678Zm494 495-42-43q-11-12-11-28.5t11-27.5q11-12 27.5-11.5T734-282l43 42q12 11 11.5 28T777-183q-12 12-29 12t-28-12Zm-42-495q-12-11-11.5-27.5T678-734l42-43q11-12 28-11.5t29 11.5q12 12 12 29t-12 28l-43 42q-12 11-28 11t-28-11ZM183-183q-12-12-12-29t12-28l43-42q12-11 28.5-11t27.5 11q12 11 11.5 27.5T282-226l-42 43q-11 12-28 11.5T183-183Zm297-297Z" />
+    </symbol>
+    <symbol id="i-download" viewBox="0 -960 960 960">
+      <path
+        d="M465-339.5q-7-2.5-13-8.5L308-492q-12-12-11.5-28t11.5-28q12-12 28.5-12.5T365-549l75 75v-286q0-17 11.5-28.5T480-800q17 0 28.5 11.5T520-760v286l75-75q12-12 28.5-11.5T652-548q11 12 11.5 28T652-492L508-348q-6 6-13 8.5t-15 2.5q-8 0-15-2.5ZM240-160q-33 0-56.5-23.5T160-240v-80q0-17 11.5-28.5T200-360q17 0 28.5 11.5T240-320v80h480v-80q0-17 11.5-28.5T760-360q17 0 28.5 11.5T800-320v80q0 33-23.5 56.5T720-160H240Z" />
+    </symbol>
+    <symbol id="i-chevron_left" viewBox="0 -960 960 960">
+      <path
+        d="m432-480 156 156q11 11 11 28t-11 28q-11 11-28 11t-28-11L348-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l184-184q11-11 28-11t28 11q11 11 11 28t-11 28L432-480Z" />
+    </symbol>
+    <symbol id="i-chevron_right" viewBox="0 -960 960 960">
+      <path
+        d="M504-480 348-636q-11-11-11-28t11-28q11-11 28-11t28 11l184 184q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L404-268q-11 11-28 11t-28-11q-11-11-11-28t11-28l156-156Z" />
+    </symbol>
+    <symbol id="i-search" viewBox="0 -960 960 960">
+      <path
+        d="M380-320q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l224 224q11 11 11 28t-11 28q-11 11-28 11t-28-11L532-372q-30 24-69 38t-83 14Zm0-80q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+    </symbol>
+    <symbol id="i-add" viewBox="0 -960 960 960">
+      <path
+        d="M440-440H240q-17 0-28.5-11.5T200-480q0-17 11.5-28.5T240-520h200v-200q0-17 11.5-28.5T480-760q17 0 28.5 11.5T520-720v200h200q17 0 28.5 11.5T760-480q0 17-11.5 28.5T720-440H520v200q0 17-11.5 28.5T480-200q-17 0-28.5-11.5T440-240v-200Z" />
+    </symbol>
+    <symbol id="i-match_case" viewBox="0 -960 960 960"><path d="m247-364-32 89q-4 11-13 17t-20 6q-19 0-29.5-15.5T149-300l138-368q4-11 13.5-17.5T321-692h28q11 0 21 6.5t14 17.5l138 369q7 17-4 32t-29 15q-11 0-20-6.5T456-276l-31-88H247Zm23-64h131l-64-182h-4l-63 182Zm395 186q-51 0-81-27.5T554-342q0-44 34.5-72.5T677-443q23 0 45 4t38 11v-12q0-29-20.5-47T685-505q-15 0-29.5 4.5T629-487q-13 10-24.5 7T586-491q-7-8-7-19t11-19q20-16 45-23.5t51-7.5q69 0 103 32.5t34 97.5v147q0 13-9.5 22t-22.5 9q-13 0-22-9.5t-9-22.5v-5h-4q-14 23-38 35t-53 12Zm12-54q35 0 59.5-24t24.5-56q-14-8-33.5-12.5T689-393q-32 0-50 14t-18 37q0 20 16 33t40 13Z"/></symbol>
+    <symbol id="i-mail" viewBox="0 -960 960 960"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm640-480L501-453q-5 3-10.5 4.5T480-447q-5 0-10.5-1.5T459-453L160-640v400h640v-400ZM480-520l320-200H160l320 200ZM160-640v10-59 1-32 32-.5 58.5-10 400-400Z"/></symbol>
+    <symbol id="i-autorenew" viewBox="0 -960 960 960"><path d="M240-478q0 16 2 31.5t7 30.5q5 17-1 32.5T227-361q-16 8-31.5 1.5T175-383q-8-23-11.5-47t-3.5-48q0-134 93-228t227-94h7l-36-36q-11-11-11-28t11-28q11-11 28-11t28 11l104 104q12 12 12 28t-12 28L507-628q-11 11-28 11t-28-11q-11-11-11-28t11-28l36-36h-7q-100 0-170 70.5T240-478Zm480-4q0-16-2-31.5t-7-30.5q-5-17 1-32.5t21-22.5q16-8 31.5-1.5T785-577q8 23 11.5 47t3.5 48q0 134-93 228t-227 94h-7l36 36q11 11 11 28t-11 28q-11 11-28 11t-28-11L349-172q-12-12-12-28t12-28l104-104q11-11 28-11t28 11q11 11 11 28t-11 28l-36 36h7q100 0 170-70.5T720-482Z"/></symbol>
+    <symbol id="i-close" viewBox="0 -960 960 960"><path d="M480-424 284-228q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536-480l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480-424Z"/></symbol>
+    <symbol id="i-undo" viewBox="0 -960 960 960">
+      <path
+        d="M320-200q-17 0-28.5-11.5T280-240q0-17 11.5-28.5T320-280h244q63 0 109.5-40T720-420q0-60-46.5-100T564-560H312l76 76q11 11 11 28t-11 28q-11 11-28 11t-28-11L188-572q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l144-144q11-11 28-11t28 11q11 11 11 28t-11 28l-76 76h252q97 0 166.5 63T800-420q0 94-69.5 157T564-200H320Z" />
+    </symbol>
+  </svg>
+  <script>
+    // 아이콘 한 개의 HTML. 크기는 글자 크기, 색은 글자색을 따라갑니다 (js/ 의 스크립트도 이 함수를 씁니다).
+    window.icon = (name, cls) => `<svg class="ic${cls ? ' ' + cls : ''}" aria-hidden="true" focusable="false"><use href="#i-${name}"/></svg>`;
+  </script>
+  <div class="container">
+    <div class="header">
+      <!-- <div class="school-badge">대전과학고등학교 · 2026학년도</div> -->
+      <h1 font-weight="500">dshs43.app</h1>
+      <!-- <p class="subtitle">대전과학고 43기 · 수행평가와 일정을 한곳에서</p> -->
+    </div>
+    <!-- 탭과 그 위의 아이콘 버튼은 함께 움직여, 폰에서 스크롤해도 위에 붙어 있습니다 -->
+    <div class="nav-bar">
+      <div class="nav-icons">
+        <span class="nav-logo" aria-hidden="true">dshs43.app</span>
+        <button class="icon-btn" id="updBtn" type="button" title="업데이트 소식" aria-label="업데이트 소식"><svg class="ic"
+            aria-hidden="true">
+            <use href="#i-campaign" />
+          </svg></button>
+        <button class="icon-btn" id="btnSettings" type="button" title="설정" aria-label="설정" style="display:none"><svg
+            class="ic" aria-hidden="true">
+            <use href="#i-settings" />
+          </svg></button>
+      </div>
+      <div class="study-nav" id="studyNav" style="display:none"></div>
+    </div>
+    <div class="install-bar" id="installBar">
+      <div class="install-icon"><svg class="ic" aria-hidden="true">
+          <use href="#i-install_mobile" />
+        </svg></div>
+      <div class="install-txt">
+        <div class="install-title" id="installTitle">앱으로 설치하기</div>
+        <div class="install-sub" id="installSub">홈 화면에 추가하면 앱처럼 바로 열리고, 알림도 받을 수 있어요. 설치 중 뜨는 보안 경고는 정상이에요</div>
+      </div>
+      <button class="install-btn" id="installBtn">설치</button>
+      <button class="install-x" id="installX" aria-label="닫기">✕</button>
+    </div>
+    <div class="offline-note"><svg class="ic" aria-hidden="true">
+        <use href="#i-wifi_off" />
+      </svg> 인터넷에 연결되어 있지 않아요 · 연결되면 바로 다시 보여요</div>
+    <div class="login-gate" id="loginGate">
+      <div class="gate-card">
+        <div class="welcome-icon"><svg class="ic" aria-hidden="true">
+            <use href="#i-lock" />
+          </svg></div>
+        <div class="welcome-text">dshs.app 계정으로 시작하면 수행평가 공지 · 내 일정 · 할 일 · 급식 · 학교 일정을 한곳에서 볼 수 있어요<br>따로 가입할 필요 없어요
+        </div>
+        <button class="study-submit" id="gateLogin" type="button">dshs.app 계정으로 시작하기</button>
+        <button class="auth-admin" id="gateAdmin" type="button">관리자 · 아이디로 로그인</button>
+      </div>
+    </div>
+    <div class="study-view" id="studyView"></div>
+    <p class="site-note">대전과학고등학교 및 dshs.app에서 공식적으로 제공하거나 운영하는 사이트가 아닌 학생 비공식 사이트입니다.</p>
+  </div>
+  <div class="ios-sheet" id="iosSheet">
+    <div class="ios-card">
+      <h3>홈 화면에 추가하기</h3>
+      <p>이 브라우저에서는 아래 순서로 직접 추가할 수 있어요.</p>
+      <div id="iosSteps"></div>
+      <div id="installNotes"></div>
+      <button class="diag-btn" id="diagBtn" onclick="runInstallDiagnostics()"><svg class="ic" aria-hidden="true">
+          <use href="#i-troubleshoot" />
+        </svg> 설치 준비 상태 점검하기</button>
+      <div class="diag-list" id="diagList" style="display:none"></div>
+      <button class="ios-close" onclick="document.getElementById('iosSheet').classList.remove('show')">닫기</button>
+    </div>
+  </div>
+  <div class="study-modal" id="studyModal"></div>
+  <div class="study-toast" id="studyToast"></div>
+  <div class="study-modal" id="updModal"></div>
+  <script src="js/install.js"></script>
+  <script src="updates.js"></script>
+  <script src="js/updates-popup.js"></script>
+  <script src="js/header-scroll.js"></script>
+  <script src="config.js"></script>
+  <!-- 앱 스크립트 (js/). 모듈이 아니라 전역 스코프를 함께 쓰는 스크립트라, 아래 순서대로 읽어야 합니다.
+     맨 끝 main.js 가 init() 을 한 번 부릅니다. 파일을 더하면 sw.js 의 SHELL 에도 넣습니다. -->
+  <script defer src="js/core.js"></script>
+  <script defer src="js/start.js"></script>
+  <script defer src="js/shell.js"></script>
+  <script defer src="js/seat.js"></script>
+  <script defer src="js/login.js"></script>
+  <script defer src="js/timetable.js"></script>
+  <script defer src="js/meal.js"></script>
+  <script defer src="js/calendar.js"></script>
+  <script defer src="js/events.js"></script>
+  <script defer src="js/feedback.js"></script>
+  <script defer src="js/school.js"></script>
+  <script defer src="js/dshs-login.js"></script>
+  <script defer src="js/notice.js"></script>
+  <script defer src="js/todo.js"></script>
+  <script defer src="js/push.js"></script>
+  <script defer src="js/main.js"></script>
+</body>
+
+</html>

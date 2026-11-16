@@ -1,0 +1,973 @@
+/* dshs43.app — css/timetable.css
+   시간표 검색 · 프로필 · 밑줄 탭 · 시간표 표 · 과목 색 · 배경화면 만들기
+   index.html 에 적힌 순서대로 읽습니다 (base → timetable → app → study → calendar → events → mobile → themes).
+   같은 선택자는 뒤 파일이 앞 파일을 덮어쓰므로 순서를 바꾸지 않습니다. */
+.search-input-wrap {
+   position: relative;
+}
+
+#nameInput {
+   width: 100%;
+   background: var(--surface);
+   border: 1px solid var(--border);
+   border-radius: 0;
+   padding: 12px 52px 12px 16px;
+   font-size: 16px;
+   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+   font-weight: 500;
+   color: var(--text);
+   outline: none;
+   transition: all 0.25s;
+}
+
+#nameInput:focus {
+   border-color: var(--accent1);
+   box-shadow: 0 0 0 3px var(--glow);
+}
+
+#nameInput::placeholder {
+   color: var(--text-muted);
+}
+
+/* 입력칸 오른쪽 안에 있는 아이콘 버튼 (테마 색): 시간표 검색의 돋보기(.btn-search) · 할 일 추가의 플러스(.field-btn) */
+.btn-search,
+.field-btn {
+   position: absolute;
+   top: 50%;
+   right: 5px;
+   transform: translateY(-50%);
+   width: 40px;
+   height: 40px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background: none;
+   border: none;
+   border-radius: 50%;
+   padding: 0;
+   color: var(--accent1);
+   cursor: pointer;
+   transition: background 0.2s;
+}
+
+.btn-search .ic,
+.field-btn .ic {
+   width: 23px;
+   height: 23px;
+}
+
+/* 올렸을 때: 배경은 깔지 않고 아이콘 색만 조금 진하게 (아이콘 버튼은 모두 색만 바꿉니다) */
+.btn-search:hover,
+.btn-search:focus-visible,
+.field-btn:hover,
+.field-btn:focus-visible {
+   color: color-mix(in srgb, var(--accent1) 65%, var(--text));
+   outline: none;
+}
+
+.suggestions {
+   position: absolute;
+   top: calc(100% + 6px);
+   left: 0;
+   right: 0;
+   background: var(--card);
+   border: 1px solid var(--border);
+   border-radius: 0;
+   overflow: hidden;
+   z-index: 100;
+   display: none;
+   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.suggestions.show {
+   display: block;
+}
+
+.suggestion-item {
+   padding: 12px 20px;
+   cursor: pointer;
+   transition: background 0.15s;
+   font-size: 15px;
+   display: flex;
+   align-items: center;
+   gap: 10px;
+}
+
+.suggestion-item:hover {
+   background: var(--border);
+}
+
+.suggestion-id {
+   font-family: var(--font-num);
+   font-size: 12px;
+   color: var(--text-muted);
+}
+
+.error-msg {
+   display: none;
+   margin-top: 12px;
+   color: #ff6b6b;
+   font-size: 13px;
+   padding: 10px 16px;
+   background: rgba(255, 107, 107, 0.1);
+   border-radius: 0;
+   border: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+.error-msg.show {
+   display: block;
+}
+
+#result {
+   display: none;
+}
+
+#result.show {
+   display: block;
+}
+
+.student-profile {
+   display: flex;
+   align-items: center;
+   gap: 20px;
+   margin-bottom: 28px;
+   animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+   from {
+      opacity: 0;
+      transform: translateY(-16px);
+   }
+
+   to {
+      opacity: 1;
+      transform: translateY(0);
+   }
+}
+
+.student-avatar img {
+   position: absolute;
+   inset: 0;
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+}
+
+.student-avatar {
+   position: relative;
+   overflow: hidden;
+   width: 60px;
+   height: 60px;
+   border-radius: 0;
+   background: linear-gradient(135deg, var(--accent1), var(--accent2));
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   font-size: 22px;
+   font-weight: 900;
+   flex-shrink: 0;
+   box-shadow: 0 4px 20px var(--glow);
+}
+
+.student-info h2 {
+   font-size: 24px;
+   font-weight: 900;
+   letter-spacing: -0.01em;
+}
+
+.student-info .student-meta {
+   color: var(--text-dim);
+   font-size: 13px;
+   font-family: var(--font-num);
+   margin-top: 4px;
+}
+
+/* 밑줄 탭 (.tabs · 맨 위 메뉴 .study-nav): 고른 탭은 글자색이 바뀌고, 밑줄(.tab-ink)이 그 탭 아래로 미끄러져 갑니다 (js/ 의 moveInk) */
+.tabs {
+   position: relative;
+   display: flex;
+   gap: 4px;
+   margin-bottom: 24px;
+   flex-wrap: wrap;
+   border-bottom: 1px solid var(--border);
+}
+
+.tab-ink {
+   position: absolute;
+   left: 0;
+   top: 0;
+   width: 0;
+   height: 2px;
+   background: var(--accent1);
+   pointer-events: none;
+   transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), width 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+   .tab-ink {
+      transition: none;
+   }
+}
+
+.tab-btn {
+   background: none;
+   border: none;
+   border-radius: 0;
+   padding: 10px 16px;
+   font-size: 14px;
+   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+   font-weight: 600;
+   color: var(--text-dim);
+   cursor: pointer;
+   transition: color 0.2s;
+}
+
+.tab-btn.active {
+   color: var(--accent1);
+}
+
+.tab-btn:hover:not(.active) {
+   color: var(--text);
+}
+
+.tab-panel {
+   display: none;
+   animation: fadeIn 0.3s ease;
+}
+
+.tab-panel.active {
+   display: block;
+}
+
+@keyframes fadeIn {
+   from {
+      opacity: 0;
+   }
+
+   to {
+      opacity: 1;
+   }
+}
+
+.timetable-wrap {
+   overflow-x: auto;
+   border-radius: 0;
+   border: 1px solid var(--border);
+}
+
+table.timetable {
+   width: 100%;
+   border-collapse: collapse;
+   background: var(--card);
+   min-width: 600px;
+}
+
+.timetable th {
+   padding: 14px 10px;
+   text-align: center;
+   font-size: 12px;
+   font-weight: 700;
+   letter-spacing: 0.08em;
+   text-transform: uppercase;
+   font-family: var(--font-num);
+   color: var(--text-dim);
+   border-bottom: 1px solid var(--border);
+   white-space: nowrap;
+}
+
+.timetable th.day-header {
+   font-size: 14px;
+   font-weight: 700;
+}
+
+.timetable th.day-header.mon {
+   color: #a78bfa;
+}
+
+.timetable th.day-header.tue {
+   color: #60a5fa;
+}
+
+.timetable th.day-header.wed {
+   color: #34d399;
+}
+
+.timetable th.day-header.thu {
+   color: #fb923c;
+}
+
+.timetable th.day-header.fri {
+   color: #f472b6;
+}
+
+/* 칸 안쪽 여백(padding)이 과목 칸 사이의 얇은 틈이 됩니다 (아래 background-clip) */
+.timetable td {
+   padding-left: 1px;
+   border-bottom: 1px solid rgba(42, 42, 61, 0.5);
+   border-right: 1px solid rgba(42, 42, 61, 0.5);
+   text-align: center;
+   vertical-align: middle;
+   min-width: 90px;
+   height: 54px;
+}
+
+.timetable td.period-col {
+   width: 44px;
+   min-width: 44px;
+   font-size: 11px;
+   color: var(--text-muted);
+   font-family: var(--font-num);
+   border-right: 1px solid var(--border);
+   background: var(--surface);
+}
+
+.class-cell {
+   border-radius: 0;
+   padding: 5px 6px;
+   font-size: 11px;
+   font-weight: var(--tt-weight);   /* 과목 이름 아래 작은 글씨(전체)도 같은 굵기 */
+   line-height: 1.3;
+   min-height: 50px;
+   color: #fff;
+   /* text-shadow: 0 0 2px rgba(0, 0, 0, 0.22); */
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;       /* 왼쪽 */
+   justify-content: flex-start;   /* 위쪽 */
+   text-align: left;
+   cursor: pointer;
+   transition: transform 0.15s;
+}
+
+.class-cell:hover {
+   transform: scale(1.05);
+}
+
+.timetable td.common-cell {
+   background: color-mix(in srgb, #aab2bd var(--tt-alpha), transparent);
+}
+
+/* 과목 칸의 색은 칸(td) 전체에 칠하고, 표 바탕색(--card)의 안쪽 그림자로 칸 사이 얇은 틈을 만듭니다.
+   색을 칸(td)에 칠하므로, 이어지는 교시를 묶은 칸(rowspan)도 높이만큼 꽉 찹니다.
+   background-clip: content-box 로 틈을 만들면 안 됩니다 — Safari(아이폰 · 아이패드)는 세로 정렬을 보이지 않는
+   안쪽 여백으로 처리해서, 묶은 칸의 아래 교시가 색 없이 빈칸으로 보입니다. */
+.timetable td[class*="color-"],
+.timetable td.common-cell {
+   box-shadow: inset 1px 0 0 var(--card);
+   vertical-align: top;   /* 글자는 칸 맨 위에서 시작 (묶인 칸에서도) */
+}
+
+/* 수업 외 활동(자율 · 동아리 등) */
+.common-cell:hover {
+   transform: none;
+}
+
+.class-cell .subj-name {
+   font-size: calc(var(--tt-font) * var(--tt-scale));
+   font-weight: var(--tt-weight);
+}
+
+.class-cell .ban-name {
+   font-size: calc((var(--tt-font) - 2px) * var(--tt-scale));   /* 과목 이름 아래 작은 글씨 (전체) */
+   opacity: 0.8;
+   font-family: var(--font-num);
+   margin-top: 1px;
+}
+
+/* 과목 색: 밝은 파스텔 단색에 흰 글씨. 시간표 칸(td)과 범례 점이 같이 씁니다.
+   농도는 아래 --tt-alpha, 글씨 크기는 --tt-font, 굵기는 --tt-weight 한 곳에서 바꿉니다 (100% = 불투명, 90% = 10% 비침).
+   수업 외 활동 칸(.common-cell)도 이 값을 씁니다. */
+:root {
+   --tt-alpha: 70%;
+   --tt-font: 14px;   /* 과목 이름 글씨 크기 (컴퓨터). 폰은 css/mobile.css 의 --tt-font */
+   --tt-weight: 600;   /* 과목 이름 글씨 굵기 (100~900. 400 보통 · 700 굵게) */
+   --tt-scale: 1;     /* 글자 크기 버튼이 바꾸는 배율 (중간 = 1) */
+}
+
+/* 시간표 글자 크기 버튼 (작게 · 중간 · 크게): 누르면 html 의 data-tt-font 가 s · m · l 로 바뀝니다.
+   작게 · 크게의 배율은 아래 두 값입니다. 실제 크기 = --tt-font × --tt-scale */
+:root[data-tt-font="s"] {
+   --tt-scale: 0.9;
+   --tt-weight: 700
+}
+
+:root[data-tt-font="l"] {
+   --tt-scale: 1.1;
+   --tt-weight: 500;
+}
+
+/* 시간표 아래 줄: 왼쪽에 과목 색 범례, 오른쪽에 글자 크기 버튼(Aa) */
+.tt-under {
+   display: flex;
+   align-items: stretch;   /* 범례와 Aa 버튼의 높이를 같게 */
+   gap: 12px;
+   margin-top: 10px;
+}
+
+.tt-under .legend {
+   flex: 1;
+   min-width: 0;
+   margin-top: 0;
+   padding: 7px 12px;
+   display: flex;
+   align-items: center;   /* 색 점과 이름을 세로 가운데에 */
+}
+
+/* .seg 의 아래 여백(14px)이 뒤 파일(calendar.css)에서 다시 걸리므로 여기서 확실히 없앱니다: 남아 있으면 Aa 가 범례보다 위로 뜹니다 */
+.tt-under .tt-size {
+   flex-shrink: 0;
+   align-items: center;
+   margin: 0;
+}
+
+.tt-size {
+   margin: 0;
+}
+
+.tt-size .seg-btn {
+   flex: none;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 40px;
+   height: 32px;
+   padding: 0;
+}
+
+/* 같은 Aa 아이콘을 크기만 다르게 */
+.tt-size .seg-btn[data-ttfont="s"] .ic {
+   width: 15px;
+   height: 15px;
+}
+
+.tt-size .seg-btn[data-ttfont="m"] .ic {
+   width: 20px;
+   height: 20px;
+}
+
+.tt-size .seg-btn[data-ttfont="l"] .ic {
+   width: 25px;
+   height: 25px;
+}
+
+.color-0 {
+   background: color-mix(in srgb, #9f86e4 var(--tt-alpha), transparent);
+}
+
+.color-1 {
+   background: color-mix(in srgb, #f08fb0 var(--tt-alpha), transparent);
+}
+
+.color-2 {
+   background: color-mix(in srgb, #78cb87 var(--tt-alpha), transparent);
+}
+
+.color-3 {
+   background: color-mix(in srgb, #7aa5e9 var(--tt-alpha), transparent);
+}
+
+.color-4 {
+   background: color-mix(in srgb, #fbaa68 var(--tt-alpha), transparent);
+}
+
+.color-5 {
+   background: color-mix(in srgb, #ebc26a var(--tt-alpha), transparent);
+}
+
+.color-6 {
+   background: color-mix(in srgb, #a6c96f var(--tt-alpha), transparent);
+}
+
+.color-7 {
+   background: color-mix(in srgb, #d094ec var(--tt-alpha), transparent);
+}
+
+.color-8 {
+   background: color-mix(in srgb, #eb8471 var(--tt-alpha), transparent);
+}
+
+.color-9 {
+   background: color-mix(in srgb, #6cc4e6 var(--tt-alpha), transparent);
+}
+
+.color-10 {
+   background: color-mix(in srgb, #97d9db var(--tt-alpha), transparent);
+}
+
+.color-11 {
+   background: color-mix(in srgb, #c8a78c var(--tt-alpha), transparent);
+}
+
+.color-12 {
+   background: color-mix(in srgb, #8a9be8 var(--tt-alpha), transparent);
+}
+
+.cmp-pickers {
+   display: flex;
+   align-items: flex-end;
+   gap: 10px;
+   margin-bottom: 18px;
+}
+
+.cmp-picker {
+   flex: 1;
+   min-width: 0;
+}
+
+.cmp-label {
+   display: block;
+   font-size: 10px;
+   font-weight: 700;
+   letter-spacing: 0.12em;
+   font-family: var(--font-num);
+   margin-bottom: 6px;
+}
+
+.cmp-label.a {
+   color: var(--accent1);
+}
+
+.cmp-label.b {
+   color: var(--accent2);
+}
+
+.cmp-input {
+   width: 100%;
+   background: var(--surface);
+   border: 1px solid var(--border);
+   border-radius: 0;
+   padding: 10px 12px;
+   font-size: 15px;
+   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+   font-weight: 500;
+   color: var(--text);
+   outline: none;
+   transition: border-color 0.2s;
+}
+
+.cmp-input:focus {
+   border-color: var(--accent1);
+}
+
+.cmp-input.b:focus {
+   border-color: var(--accent2);
+}
+
+.cmp-swap {
+   background: var(--surface);
+   border: 1px solid var(--border);
+   color: var(--text-dim);
+   border-radius: 10px;
+   padding: 10px 12px;
+   cursor: pointer;
+   font-size: 14px;
+   margin-bottom: 0;
+   transition: all 0.2s;
+   flex-shrink: 0;
+}
+
+.cmp-swap:hover {
+   border-color: var(--accent1);
+   color: var(--text);
+}
+
+.cmp-hint {
+   text-align: center;
+   color: var(--text-muted);
+   padding: 40px 20px;
+   font-size: 14px;
+   line-height: 1.7;
+}
+
+.cmp-stats {
+   display: flex;
+   gap: 10px;
+   flex-wrap: wrap;
+   margin-bottom: 16px;
+}
+
+.cmp-stat {
+   flex: 1;
+   min-width: 110px;
+   background: var(--surface);
+   border: 1px solid var(--border);
+   border-radius: 0;
+   padding: 12px 14px;
+}
+
+.cmp-stat-num {
+   font-family: var(--font-num);
+   font-size: 22px;
+   font-weight: 700;
+   line-height: 1;
+}
+
+.cmp-stat-label {
+   font-size: 11px;
+   color: var(--text-dim);
+   margin-top: 5px;
+}
+
+.cmp-subjects {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 5px;
+   margin-bottom: 16px;
+}
+
+.cmp-tag {
+   font-size: 0.75rem;
+   background: rgba(111, 224, 196, 0.12);
+   border: 1px solid rgba(111, 224, 196, 0.28);
+   border-radius: 0;
+   padding: 3px 9px;
+   color: var(--accent3);
+}
+
+.cmp-tag small {
+   font-family: var(--font-num);
+   opacity: 0.75;
+   margin-left: 3px;
+}
+
+.cmp-table td {
+   height: auto;
+   padding: 4px;
+   min-width: 104px;
+}
+
+.cmp-cell {
+   border-radius: 0;
+   overflow: hidden;
+   display: flex;
+   flex-direction: column;
+   min-height: 52px;
+}
+
+.cmp-row {
+   flex: 1;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   padding: 4px 3px;
+   font-size: 10.5px;
+   font-weight: 700;
+   line-height: 1.25;
+}
+
+.cmp-row.a {
+   background: rgba(124, 111, 224, 0.16);
+   color: #a78bfa;
+}
+
+.cmp-row.b {
+   background: rgba(224, 111, 158, 0.16);
+   color: #f472b6;
+}
+
+.cmp-cell>.cmp-row+.cmp-row {
+   border-top: 1px solid rgba(10, 10, 15, 0.6);
+}
+
+.cmp-row.free {
+   background: rgba(255, 255, 255, 0.02);
+   color: var(--text-muted);
+   font-weight: 400;
+}
+
+.cmp-row .cmp-ban {
+   font-size: 8.5px;
+   opacity: 0.75;
+   font-family: var(--font-num);
+   margin-top: 1px;
+}
+
+.cmp-cell.match {
+   border: 1px solid rgba(111, 224, 196, 0.55);
+   box-shadow: 0 0 0 1px rgba(111, 224, 196, 0.18) inset;
+}
+
+.cmp-cell.match .cmp-row {
+   background: rgba(111, 224, 196, 0.2);
+   color: #6fe0c4;
+}
+
+.cmp-cell.freematch {
+   border: 1px dashed rgba(111, 224, 196, 0.4);
+}
+
+.cmp-cell.freematch .cmp-row {
+   background: rgba(111, 224, 196, 0.07);
+   color: var(--accent3);
+   font-weight: 500;
+}
+
+.cmp-cell.common .cmp-row {
+   background: rgba(136, 136, 170, 0.12);
+   color: var(--text-dim);
+}
+
+.cmp-cell.common {
+   border: 1px dashed var(--border);
+}
+
+.cmp-badge {
+   font-size: 8px;
+   letter-spacing: 0.06em;
+   font-family: var(--font-num);
+   opacity: 0.9;
+}
+
+.cmp-legend {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 10px;
+   margin-top: 12px;
+   font-size: 11px;
+   color: var(--text-dim);
+}
+
+.cmp-legend span.box {
+   display: inline-block;
+   width: 10px;
+   height: 10px;
+   border-radius: 0;
+   margin-right: 5px;
+   vertical-align: -1px;
+}
+
+.wp-controls {
+   display: flex;
+   flex-direction: column;
+   gap: 16px;
+   margin-bottom: 20px;
+}
+
+.wp-group-label {
+   font-size: 10px;
+   font-weight: 700;
+   letter-spacing: 0.12em;
+   color: var(--text-dim);
+   font-family: var(--font-num);
+   margin-bottom: 8px;
+   text-transform: uppercase;
+}
+
+.wp-select {
+   width: 100%;
+   background: var(--surface);
+   border: 1px solid var(--border);
+   border-radius: 0;
+   padding: 11px 12px;
+   font-size: 14px;
+   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+   color: var(--text);
+   outline: none;
+}
+
+.wp-chips {
+   display: flex;
+   gap: 8px;
+   flex-wrap: wrap;
+}
+
+/* 배경화면의 배치 · 테마 고르기: 박스 없이 아이콘만. 고른 것은 테마 색, 나머지는 흐린 회색 */
+.wp-chip {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   padding: 4px;
+   background: none;
+   border: none;
+   color: var(--text-muted);
+   cursor: pointer;
+   transition: color 0.2s;
+}
+
+.wp-chip .ic {
+   width: 26px;
+   height: 26px;
+}
+
+.wp-chip:hover {
+   color: var(--text);
+}
+
+.wp-chip.on {
+   color: var(--accent1);
+}
+
+.wp-preview-area {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 14px;
+}
+
+.wp-frame {
+   border-radius: 0;
+   overflow: hidden;
+   border: 1px solid var(--border);
+   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+   background: #000;
+   line-height: 0;
+}
+
+.wp-frame img {
+   display: block;
+   width: 100%;
+   max-width: 240px;
+   height: auto;
+}
+
+.wp-size-note {
+   font-family: var(--font-num);
+   font-size: 11px;
+   color: var(--text-muted);
+}
+
+.wp-save {
+   width: 100%;
+   background: var(--accent1);
+   border: none;
+   border-radius: 12px;
+   padding: 15px;
+   font-size: 15px;
+   font-weight: 700;
+   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+   color: #fff;
+   cursor: pointer;
+   transition: transform 0.15s, opacity 0.2s;
+}
+
+.wp-save:active {
+   transform: scale(0.98);
+}
+
+.wp-tip {
+   background: var(--surface);
+   border: 1px solid var(--border);
+   border-radius: 0;
+   padding: 13px 16px;
+   font-size: 12px;
+   color: var(--text-dim);
+   line-height: 1.7;
+   margin-top: 14px;
+}
+
+.wp-tip strong {
+   color: var(--text);
+   font-weight: 600;
+}
+
+.notice-box {
+   display: flex;
+   gap: 10px;
+   background: rgba(250, 204, 21, 0.07);
+   border: 1px solid rgba(250, 204, 21, 0.3);
+   border-radius: 0;
+   padding: 13px 15px;
+   margin-bottom: 18px;
+}
+
+.notice-box .ic {
+   font-size: 15px;
+   line-height: 1.5;
+}
+
+.notice-box .tx {
+   font-size: 12.5px;
+   line-height: 1.65;
+   color: #e8d9a0;
+}
+
+.notice-box .tx b {
+   color: #facc15;
+   font-weight: 700;
+}
+
+.teacher-avatar {
+   background: linear-gradient(135deg, var(--accent3), var(--accent2)) !important;
+}
+
+.t-stack {
+   display: flex;
+   flex-direction: column;
+   gap: 3px;
+   height: 100%;
+}
+
+.t-cell {
+   border-radius: 0;
+   padding: 5px 3px;
+   flex: 1;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   min-height: 26px;
+   cursor: pointer;
+   transition: transform 0.15s;
+}
+
+.t-cell:hover {
+   transform: scale(1.05);
+}
+
+.t-line {
+   font-size: 10px;
+   font-weight: 700;
+   line-height: 1.2;
+   text-align: center;
+}
+
+.t-line small {
+   display: block;
+   font-size: 8.5px;
+   font-weight: 500;
+   opacity: 0.8;
+   font-family: var(--font-num);
+}
+
+.t-room {
+   font-size: 11px;
+   color: var(--text-dim);
+   margin-top: 3px;
+   line-height: 1.5;
+}
+
+.t-card {
+   background: var(--surface);
+   border: 1px solid var(--border);
+   border-radius: 0;
+   padding: 13px 15px;
+}
+
+.t-card-head {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   margin-bottom: 6px;
+}
+
+.t-card-name {
+   font-size: 14px;
+   font-weight: 700;
+}
+
+.t-card-bans {
+   font-family: var(--font-num);
+   font-size: 11px;
+   color: var(--text-dim);
+   margin-left: auto;
+}
+
+.suggestion-tag {
+   font-size: 10px;
+   background: rgba(111, 224, 196, 0.15);
+   color: var(--accent3);
+   border-radius: 0;
+   padding: 2px 6px;
+   font-weight: 700;
+}

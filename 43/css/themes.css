@@ -1,0 +1,103 @@
+/* dshs43.app — css/themes.css
+   화면 테마 (밝은 화면 · 심플 · 바다 · 숲 · 코코 · 벚꽃)
+   index.html 에 적힌 순서대로 읽습니다 (base → timetable → app → study → calendar → events → mobile → themes).
+   같은 선택자는 뒤 파일이 앞 파일을 덮어쓰므로 순서를 바꾸지 않습니다. */
+/* ---------- 화면 테마 (설정 → 화면 테마) ----------
+   html 의 data-theme 이 테마 이름(dark · light · simple · ocean · forest · coco · sakura), data-tone 이 밝기(dark · light)입니다.
+   테마를 더할 때 고칠 곳 세 군데: 이 파일 맨 아래의 data-theme 블록, js/dshs-login.js 의 THEMES(설정 창 버튼),
+   index.html 맨 위 스크립트의 TONE · BG (여기에 없는 이름은 적용되지 않습니다).
+   밝은 테마(data-tone="light")는 아래 규칙으로 어두운 배경용 연한 글자색을 진하게 바꾸고,
+   테마마다 다른 색은 맨 아래 data-theme 블록에서 변수만 바꿉니다. */
+:root[data-tone="light"] {
+  color-scheme: light;
+  --bg: #f5f5fa;
+  --surface: #ffffff;
+  --card: #eeeef5;
+  --border: #d9d9e6;
+  --accent1: #6a5cd6;
+  --accent2: #d0558a;
+  --accent3: #1fae8c;
+  --text: #1b1b28;
+  --text-dim: #5a5a76;
+  --text-muted: #8c8ca4;
+  --glow: rgba(106, 92, 214, 0.22);
+  --bar-rgb: 245,245,250;
+}
+:root[data-tone="light"] .timetable td { border-color: rgba(0,0,0,0.07); }
+:root[data-tone="light"] .timetable th.day-header.mon { color: #7c3aed; }
+:root[data-tone="light"] .timetable th.day-header.tue { color: #2563eb; }
+:root[data-tone="light"] .timetable th.day-header.wed { color: #059669; }
+:root[data-tone="light"] .timetable th.day-header.thu { color: #ea580c; }
+:root[data-tone="light"] .timetable th.day-header.fri { color: #db2777; }
+:root[data-tone="light"] .cmp-cell > .cmp-row + .cmp-row { border-top-color: rgba(0,0,0,0.08); }
+:root[data-tone="light"] .cmp-row.free, :root[data-tone="light"] .due-badge.over { background: rgba(0,0,0,0.03); }
+:root[data-tone="light"] .due-pick:hover { background: rgba(0,0,0,0.05); }
+:root[data-tone="light"] .notice-box .tx { color: #6b5a1a; }
+:root[data-tone="light"] .notice-box .tx b, :root[data-tone="light"] .warn-note b, :root[data-tone="light"] .warn-note .hd { color: #a16207; }
+:root[data-tone="light"] .ic.ok { color: #16a34a; }
+:root[data-tone="light"] .ic.bad { color: #dc2626; }
+:root[data-tone="light"] .error-msg, :root[data-tone="light"] .study-err, :root[data-tone="light"] .diag-row.bad .ms,
+:root[data-tone="light"] .study-btn.small.no, :root[data-tone="light"] .td-due.over, :root[data-tone="light"] .due-clear,
+:root[data-tone="light"] .study-submit.danger, :root[data-tone="light"] .set-row.warn b { color: #dc2626; }
+:root[data-tone="light"] .set-row.warn .ev-hint { color: #b91c1c; }
+:root[data-tone="light"] .due-badge.soon, :root[data-tone="light"] .td-due.soon, :root[data-tone="light"] .gpa-track.lib { color: #c2410c; }
+:root[data-tone="light"] .c-asg { --c: #ca8a04; }
+:root[data-tone="light"] .c-mint { --c: #0d9488; }
+:root[data-tone="light"] .c-school { --c: #64748b; }
+:root[data-tone="light"] .c-dshs { --c: #2b8fc7; }
+:root[data-tone="light"] .c-orange { --c: #ea580c; }
+:root[data-tone="light"] .c-blue { --c: #2563eb; }
+:root[data-tone="light"] .fc-host.fc { --fc-border-color: rgba(0,0,0,0.09); }
+:root[data-tone="light"] .fc-host .fc-timegrid-slot { border-bottom-color: rgba(0,0,0,0.05); }
+:root[data-tone="light"] .fc-host .fc-day-sun .fcx-wd, :root[data-tone="light"] .fc-host .fc-daygrid .fc-day-sun .fc-col-header-cell-cushion,
+:root[data-tone="light"] .fc-host .fc-day-sun .fc-daygrid-day-number { color: #dc2626; }
+:root[data-tone="light"] .fc-host .fc-day-sat .fcx-wd, :root[data-tone="light"] .fc-host .fc-daygrid .fc-day-sat .fc-col-header-cell-cushion,
+:root[data-tone="light"] .fc-host .fc-day-sat .fc-daygrid-day-number { color: #2563eb; }
+:root[data-tone="light"] .fc-host .fc-bg-event.fcx-tt { background: rgba(100,116,139,0.08); border-left-color: rgba(100,116,139,0.35); }
+:root[data-tone="light"] .fcx-tt-in { color: rgba(51,65,85,0.7); }
+:root[data-tone="light"] .study-modal { background: rgba(20,20,40,0.35); }
+
+/* 심플: BOJ(백준) 화면 색. 흰 바탕 + 파랑(#0076c0), 글자는 회색 계열(#333 · #555 · #999).
+   --accent3 는 "맞았습니다" 초록(#009874), --accent2 는 짙은 파랑(#0f4c81)입니다.
+   밝은 테마라 index.html 의 TONE 은 light, BG 는 #ffffff 로 맞춰 둡니다. */
+:root[data-theme="simple"] {
+  --bg: #ffffff; --surface: #ffffff; --card: #f7f7f7; --border: #dddddd;
+  --accent1: #0076c0; --accent2: #0f4c81; --accent3: #009874;
+  --text: #333333; --text-dim: #555555; --text-muted: #999999;
+  --glow: rgba(0, 118, 192, 0.22); --bar-rgb: 255,255,255;
+}
+
+/* 바다: 짙은 남색 + 청록 */
+:root[data-theme="ocean"] {
+  --bg: #07111b; --surface: #0c1824; --card: #122232; --border: #1f3448;
+  --accent1: #3fa7e0; --accent2: #5ad1d6; --accent3: #7be0b4;
+  --text: #e3eef7; --text-dim: #8aa6bd; --text-muted: #557089;
+  --glow: rgba(63, 167, 224, 0.3); --bar-rgb: 7,17,27;
+}
+/* 숲: 짙은 초록 + 연두 */
+:root[data-theme="forest"] {
+  --bg: #0a120d; --surface: #101a13; --card: #16241b; --border: #24382a;
+  --accent1: #5fbf7a; --accent2: #d6c25a; --accent3: #8fd9a8;
+  --text: #e6f0e8; --text-dim: #8fa996; --text-muted: #5b7262;
+  --glow: rgba(95, 191, 122, 0.3); --bar-rgb: 10,18,13;
+}
+/* 코코: 숲의 밝은 버전 (연한 초록 + 초록 · 황금) */
+:root[data-theme="coco"] {
+  --bg: #f2f7f3; --surface: #ffffff; --card: #e6f0e8; --border: #cfe0d4;
+  --accent1: #2f9a52; --accent2: #b08f1c; --accent3: #2b8f6a;
+  --text: #142019; --text-dim: #4f6b58; --text-muted: #8aa392;
+  --glow: rgba(47, 154, 82, 0.22); --bar-rgb: 242,247,243;
+}
+/* 벚꽃: 밝은 분홍 */
+:root[data-theme="sakura"] {
+  --bg: #fbf3f6; --surface: #ffffff; --card: #f7e8ee; --border: #ecd3dd;
+  --accent1: #d0577f; --accent2: #9a6ad6; --accent3: #2f9e8f;
+  --text: #2a1a21; --text-dim: #7a5864; --text-muted: #ae8d99;
+  --glow: rgba(208, 87, 127, 0.22); --bar-rgb: 251,243,246;
+}
+
+/* 설정의 화면 테마 고르기 */
+.theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 8px 0 4px; }
+.theme-grid button { display: flex; flex-direction: column; align-items: center; gap: 5px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 9px 2px 7px; font-size: 12px; font-weight: 600; font-family: 'Pretendard Variable', 'Pretendard', sans-serif; color: var(--text-dim); cursor: pointer; }
+.theme-grid button.on { border-color: var(--accent1); color: var(--text); box-shadow: 0 0 0 1px var(--accent1) inset; }
+.theme-grid i { width: 26px; height: 26px; border-radius: 50%; border: 1px solid rgba(128,128,128,0.35); }
