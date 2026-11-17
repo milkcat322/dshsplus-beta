@@ -1,5 +1,5 @@
 "use strict";
-// dshs43.app — js/shell.js: 밑줄 탭 · 맨 위 메뉴 · 인터넷 연결 · 마감 알림 카드 · 로그인 직후 안내 · 앱 설치 안내
+// dshsplus — js/shell.js: 밑줄 탭 · 맨 위 메뉴 · 인터넷 연결 · 마감 알림 카드 · 로그인 직후 안내 · 앱 설치 안내
 // 모듈이 아니라 전역 스코프를 함께 쓰는 스크립트입니다 (index.html 에 적힌 순서대로 읽음. 설명은 js/core.js 맨 위).
 
 // ---------- 밑줄 탭 ----------
@@ -86,7 +86,7 @@ function renderNav() {
   applyAccess();
 }
 
-// 제목(dshs43.app — 머리글의 h1 과 폰에서 위에 붙는 로고)을 누르면 시간표 탭으로 갑니다.
+// 제목(dshsplus — 머리글의 h1 과 폰에서 위에 붙는 로고)을 누르면 시간표 탭으로 갑니다.
 // 로그인한 43기 학생일 때만 (로그인 전 · 관리자 · 다른 기수 계정은 그대로).
 function goTimetable() {
   if (!me || me.is_admin || otherCohort()) return;
@@ -255,7 +255,7 @@ async function maybeOnboard() {
   } else if (iosPushLater) {
     steps.push(`<b>알림 켜기</b>
       <div class="ev-hint">아이폰은 홈 화면에 추가한 앱에서만 알림을 켤 수 있어요</div>
-      <div class="onb-text">홈 화면에 생긴 <b>dshs43</b> 아이콘으로 열고 <b>dshs.app 계정으로 시작하기</b>를 한 번 더 누르면, 여기서 알림을 켤 수 있어요</div>`);
+      <div class="onb-text">홈 화면에 생긴 <b>dshsplus</b> 아이콘으로 열고 <b>dshs.app 계정으로 시작하기</b>를 한 번 더 누르면, 여기서 알림을 켤 수 있어요</div>`);
   }
   openSheet("앱처럼 쓰기", `
     <div class="asg-body">로그인했어요! 두 가지만 해 두면 더 편하게 쓸 수 있어요.</div>
@@ -337,7 +337,7 @@ function iosGuideHtml() {
   const share = (x, y, cls = "ig-ic") => `<g class="${cls}" transform="translate(${x} ${y})"><path d="M-6 -2 v10 h12 v-10"/><path d="M0 -10 v12 M-4 -6 l4 -4 l4 4"/></g>`;
   const plusBox = (x, y) => `<g class="ig-ic" transform="translate(${x} ${y})"><rect x="-7" y="-7" width="14" height="14" rx="3"/><path d="M0 -4 v8 M-4 0 h8"/></g>`;
   // 1. Safari 아래 막대의 공유 버튼
-  const s1 = `<rect class="ig-bg" x="8" y="10" width="224" height="34" rx="17"/><text class="ig-dim" x="120" y="31" text-anchor="middle">dshs43.netlify.app</text>
+  const s1 = `<rect class="ig-bg" x="8" y="10" width="224" height="34" rx="17"/><text class="ig-dim" x="120" y="31" text-anchor="middle">dshsplus-beta.netlify.app</text>
     <rect class="ig-bg" x="8" y="52" width="224" height="34" rx="10"/>
     <g class="ig-ic"><path d="M36 62 l-6 7 l6 7"/><path d="M76 62 l6 7 l-6 7"/></g>
     ${share(120, 71, "ig-ic ig-hi")}<circle class="ig-ring" cx="120" cy="69" r="15"/>
@@ -352,7 +352,7 @@ function iosGuideHtml() {
     <text class="ig-dim" x="22" y="27">취소</text><text class="ig-t" x="120" y="27" text-anchor="middle">홈 화면에 추가</text>
     <text class="ig-hit" x="216" y="27" text-anchor="end">추가</text><rect class="ig-ring" x="186" y="12" width="38" height="22" rx="11"/>
     <rect class="ig-icon" x="22" y="44" width="30" height="30" rx="8"/><text class="ig-icon-t" x="37" y="64" text-anchor="middle">43</text>
-    <text class="ig-t" x="62" y="56">dshs43</text><text class="ig-dim" x="62" y="71">https://dshs43.netlify.app</text>`;
+    <text class="ig-t" x="62" y="56">dshsplus</text><text class="ig-dim" x="62" y="71">https://dshsplus-beta.netlify.app</text>`;
   return `<div class="ig">
     ${fig(s1, "Safari 아래쪽의 <b>공유</b> 버튼을 눌러요. 안 보이면 주소창 옆 <b>⋯</b> 를 먼저 눌러요", 1)}
     ${fig(s2, "목록을 아래로 내려 <b>홈 화면에 추가</b>를 눌러요", 2)}

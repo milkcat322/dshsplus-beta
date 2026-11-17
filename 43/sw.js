@@ -1,7 +1,7 @@
-// dshs43.app — 서비스 워커
+// dshsplus — 서비스 워커
 // 프론트 파일(index.html · css/ · js/ 등)을 바꾼 뒤에는 아래 CACHE 버전 숫자를 꼭 올려주세요.
 // 42기 사이트(dshs-study-v…)와 이름이 겹치지 않게 dshs43- 으로 시작합니다.
-const CACHE = 'dshs43-v37-p202611170010';
+const CACHE = 'dshs43-v37-p202611170027';
 
 const SHELL = [
   './',
@@ -149,7 +149,7 @@ self.addEventListener('fetch', e => {
 
 // ---------- 웹 푸시 ----------
 self.addEventListener('push', e => {
-  let d = { title: 'dshs43.app', body: '새 알림이 있어요', url: './' };
+  let d = { title: 'dshsplus', body: '새 알림이 있어요', url: './' };
   try { if (e.data) d = { ...d, ...e.data.json() }; } catch (err) { if (e.data) d.body = e.data.text(); }
   e.waitUntil(self.registration.showNotification(d.title, {
     body: d.body,

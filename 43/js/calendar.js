@@ -1,5 +1,5 @@
 "use strict";
-// dshs43.app — js/calendar.js: 달력(FullCalendar) · 지난 일정 자동 완료 · 공유 일정 · 목록 · 완료 체크
+// dshsplus — js/calendar.js: 달력(FullCalendar) · 지난 일정 자동 완료 · 공유 일정 · 목록 · 완료 체크
 // 모듈이 아니라 전역 스코프를 함께 쓰는 스크립트입니다 (index.html 에 적힌 순서대로 읽음. 설명은 js/core.js 맨 위).
 
 // ---------- 달력 (FullCalendar) ----------

@@ -1,5 +1,5 @@
 "use strict";
-// dshs43.app — js/start.js: 시작(init) · 다른 기수 계정 · 지난 화면 먼저 · 로그인 유지 · 로그인 이탈 기록
+// dshsplus — js/start.js: 시작(init) · 다른 기수 계정 · 지난 화면 먼저 · 로그인 유지 · 로그인 이탈 기록
 // 모듈이 아니라 전역 스코프를 함께 쓰는 스크립트입니다 (index.html 에 적힌 순서대로 읽음. 설명은 js/core.js 맨 위).
 
 // ---------- 시작 ----------
@@ -97,8 +97,8 @@ function openOtherCohort() {
   if (sb) forgetPush();   // 이 기기로 다른 기수 학생의 알림이 오지 않게
   closeStudy();
   openSheet("43기 사이트예요", `
-    <div class="asg-body">dshs43.app 은 대전과학고 <b>43기</b> 학생용 사이트예요. ${esc(me.name)}님(학번 ${esc(me.student_id)})은 42기 사이트를 써 주세요.</div>
-    <a class="study-submit" href="${esc(COHORT_OTHER_URL)}" style="display:block;text-align:center;text-decoration:none">dshs42.app 열기</a>
+    <div class="asg-body">dshsplus 은 대전과학고 <b>43기</b> 학생용 사이트예요. ${esc(me.name)}님(학번 ${esc(me.student_id)})은 42기 사이트를 써 주세요.</div>
+    <a class="study-submit" href="${esc(COHORT_OTHER_URL)}" style="display:block;text-align:center;text-decoration:none">dshsplus 열기</a>
     <button class="study-submit ghost" id="ocLogout">이 사이트에서 로그아웃</button>`);
   $("ocLogout").onclick = () => { closeModal(); logout(); };
 }

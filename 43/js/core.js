@@ -1,7 +1,7 @@
 "use strict";
 // ============================================================
-// dshs43.app — 대전과학고 43기: 계정 · 수행평가 공지 · 내 일정 · 할 일 · 급식 · 기한 알림
-// 42기 사이트(dshs42.app, milkcat322/dshs-study)를 옮겨 온 것이고, 같은 Supabase DB 를 씁니다.
+// dshsplus — 대전과학고 43기: 계정 · 수행평가 공지 · 내 일정 · 할 일 · 급식 · 기한 알림
+// 42기 사이트(dshsplus, milkcat322/dshs-study)를 옮겨 온 것이고, 같은 Supabase DB 를 씁니다.
 // 43기는 아직 시간표가 없어 시간표 화면 · 검색은 빼고, 로그인하면 내 일정으로 시작합니다.
 // ============================================================
 // 파일 나눔: js/ 의 파일들은 ES 모듈이 아니라 전역 스코프를 함께 쓰는 일반 스크립트입니다.
@@ -16,7 +16,7 @@ const EMAIL_DOMAIN = "dshs.study";   // 계정이 아이디@dshs.study 로 저�
 // 43기 학번 범위 (1학년: 1000 ~ 1999). 이 범위 밖의 학생 계정은 42기 사이트로 안내합니다.
 const COHORT_SID = [1000, 1999];
 const inCohort = (sid) => sid >= COHORT_SID[0] && sid <= COHORT_SID[1];
-const COHORT_OTHER_URL = "https://dshs42.app";
+const COHORT_OTHER_URL = "https://dshsplus-beta.netlify.app";
 
 // 43기 과목 (모두 함께 들으므로 분반 없음 → ban: null = "전체 분반"). 이수학점은 프로필 등에 쓸 수 있게 둡니다.
 // 과목 이름은 DB(cohort43_subjects · 수강 · 수행평가)와 같아야 합니다. 학생들이 부르는 이름으로 통일했습니다.
